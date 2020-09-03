@@ -2,9 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Grid from "@material-ui/core/Grid";
 import Typography from '@material-ui/core/Typography';
-import AddPhotoModal from '../Modals/AddPhotoModal'
-function Status(photos) {
-    var photoQuantity = Object.keys(photos.photos).length
+import AddAlbumModal from '../Modals/AddAlbumModal'
+
+function StatusAlbums(albums, photos) {
+    var albumsQuantity = Object.keys(albums.albums).length
     const styles = {
         background: "white",
         color: "black",
@@ -25,16 +26,17 @@ function Status(photos) {
         style = {styles}
         >
             <Typography variant="h5" gutterBottom >
-            {photoQuantity} Photos Total
+            {albumsQuantity} Albums Total
             </Typography>
-      <AddPhotoModal photos = {photos}/>
+      <AddAlbumModal albums = {albums} photos={photos}/>
+
         </Grid>
     )
 }
 
-Status.propTypes = {
-photos : PropTypes.object.isRequired
+StatusAlbums.propTypes = {
+albums : PropTypes.object.isRequired
 }
 
-export default Status
+export default StatusAlbums
 

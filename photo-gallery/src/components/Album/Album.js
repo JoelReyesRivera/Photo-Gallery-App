@@ -8,8 +8,9 @@ import CardMedia from "@material-ui/core/CardMedia";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
-import EditPhotoModal from '../Modals/EditPhotoModal'
-import DeletePhotoModal from '../Modals/DeletePhotoModal'
+import DeleteAlbumModal from '../Modals/DeleteAlbumModal'
+import PlayAlbumModal from '../Modals/PlayAlbumModal'
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,38 +24,49 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-const Photo = ({title,url,description,photos,jsonKey})  => {
+const Album = ({name,description,tags,photos,albums,jsonKey,photosArray})  => {
     const classes = useStyles();
+    const setTags = () =>{
+      var array= [ ]
+      for (let i = 0; i < tags.length;i++){
+        array.push(<Typography key= {i} className={classes.tags} variant="body2"  component="p"> - {tags[i]}</Typography>)
+      }
+      return array
+    }
     return (
         <Grid
         container item
-        sm={4}
-        lg={2}
+        sm={4 }
+        lg={3}
         xs={5}
         style={{marginTop:15, padding:10}}
         >
         <Card  className={classes.root}>
-        <CardHeader title={title} />
+        <CardHeader title={name} />
         <CardMedia
           className={classes.media}
-          image={url}
-          title={title}
+          image={photos[photosArray[0]].url}
+          title={name}
         />
+        <CardContent>
+        <Typography variant="h6"  component="p"> Tags</Typography>
+          {setTags()}
+        </CardContent>
         <CardContent>
         <Typography variant="body1"  component="p">{description}</Typography>
       </CardContent>
-        <CardActions disableSpacing itemalign="center">
-      <EditPhotoModal title={title} description={description} url={url} photos={photos} jsonKey={jsonKey}/>
-      <DeletePhotoModal photos={photos} jsonKey={jsonKey}/>
-        </CardActions>
+      <CardActions>
+        <DeleteAlbumModal albums={albums} jsonKey={jsonKey}/>
+        <PlayAlbumModal albums={albums} jsonKey={jsonKey} photosArray={photos}/>
+      </CardActions>
       </Card>
         </Grid>
     )
 }
 
 
-Photo.propTypes = {
+Album.propTypes = {
 }
 
-export default Photo
+export default Album
 
