@@ -35,13 +35,15 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function DeleteAlbumModal({albums,jsonKey}) {
+export default function DeleteAlbumModal({jsonKey}) {
+  var albums = JSON.parse(localStorage.getItem('albums'))
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
   const deletePhoto = () => {
       delete (albums[jsonKey])
+      localStorage.setItem("albums", JSON.stringify(albums));
       handleClose()
   }
   const handleOpen = () => {

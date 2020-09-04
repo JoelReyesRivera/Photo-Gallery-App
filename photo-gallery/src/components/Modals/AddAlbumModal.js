@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Fab from '@material-ui/core/Fab';
@@ -37,16 +37,86 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[1],
   }
 }));
-  
-export default function AddAlbumModal(albums) {
+
+const getTags = (albums) =>{
+  var albumKeys = Object.keys(albums);
+  var tags = []
+  for (let index = 0; index < albumKeys.length; index++) {
+        for (let i = 0; i < albums[albumKeys[index]].tags.length; i++) {
+          if(!tags.includes(albums[albumKeys[index]].tags[i])){
+            tags.push({
+              label :albums[albumKeys[index]].tags[i],
+              value:albums[albumKeys[index]].tags[i]}
+              )
+          }
+      }
+}
+  return tags
+}
+
+export default function AddAlbumModal() {
+  var photos = JSON.parse(localStorage.getItem('photos'))
+  var albums = JSON.parse(localStorage.getItem('albums'))
+  const [data,setData] = useState({
+    name : " ",
+    description:" ",
+    photosIds : [],
+    tags:[]
+  })
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
-  const addAlbum = () => {
-      //alert(jsonKey.substring(5,jsonKey.length))
-      handleClose()
+  const handleInputChange = (event) =>{
+    setData({
+      ...data,
+      [event.target.name] :event.target.value 
+    })
+}
+  const handleChangePhotos = (selectedOption) => {
+    if(selectedOption===null){
+      setData({...data, photosIds:[]})
+    return 
+    }
+    var photosIds = []
+    for (let index = 0; index < selectedOption.length; index++) {
+    photosIds.push(selectedOption[index].value)
+    }
+    setData({...data, photosIds:photosIds})
   }
+
+  const handleChangeTags = (selectedOption) => {
+    if(selectedOption===undefined){
+      setData({...data, tags:[]})
+    return 
+    }
+    var tags = []
+    for (let index = 0; index < selectedOption.length; index++) {
+      tags.push(selectedOption[index].value)
+    }
+    setData({...data, tags:tags})
+  }
+
+
+  const addAlbum = () => {
+    if(data.name === ' ' || data.description === ' ' || data.photosIds.length===0 || data.tags.length===0){
+      alert('INCOMPLETE INFO')
+      return
+    }
+    var albumskeys = Object.keys(albums)
+    var lastIndex = 0
+    for (let i = 0; i < albumskeys.length; i++) {
+      var index = parseInt(albumskeys[i].substring(5,albumskeys.length))
+      if (lastIndex < index) 
+        lastIndex = index
+    }
+    var newKey = 'album' + (lastIndex+1)
+    albums[newKey] = data
+    localStorage.setItem("albums", JSON.stringify(albums));
+    handleClose()
+  }
+  
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -57,7 +127,6 @@ export default function AddAlbumModal(albums) {
 
   const options = () =>{
       var array = []
-      var photos = albums.albums.photos
       var keys = Object.keys(photos)
       for (let i = 0; i < keys.length; i++) {
         array.push({value :keys[i], label: photos[keys[i]].title})
@@ -76,8 +145,10 @@ export default function AddAlbumModal(albums) {
     <TextField
         className={classes.textField}
         id="Name"
+        onChange={handleInputChange}
         placeholder="Name"
         fullWidth
+        name="name"
         InputLabelProps={{
         shrink: true,
         }}
@@ -89,19 +160,31 @@ export default function AddAlbumModal(albums) {
     <TextField
           className={classes.textField}
           id="Description"
+          onChange={handleInputChange}
           placeholder="Description"
+          name="description"
           fullWidth
           InputLabelProps={{
             shrink: true,
           }}
           variant="outlined"
         />
-    <Typography variant="h6" gutterBottom style={{marginTop:20, marginBottom:10}}>
+    <Typography variant="h6"  gutterBottom style={{marginTop:20, marginBottom:10}}>
+    Tags
+    </Typography>
+    <Select
+    isMulti
+    name="tags"
+    onChange={handleChangeTags}
+    options = {getTags(albums)}
+  />
+    <Typography variant="h6"  gutterBottom style={{marginTop:20, marginBottom:10}}>
     Photos
     </Typography>
     <Select
     isMulti
-    name="photos"
+    name="photosIds"
+    onChange={handleChangePhotos}
     options = {options()}
   />
     <Button className = {classes.button} variant="contained" fullWidth style={{marginTop:25}} onClick={() => {addAlbum()}}> 

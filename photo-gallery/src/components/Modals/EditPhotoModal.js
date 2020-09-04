@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState}from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Typography from '@material-ui/core/Typography';
@@ -37,13 +37,27 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function EditPhotoModal({title,description,url,photos,jsonKey}) {
+export default function EditPhotoModal({title,description,url,jsonKey}) {
+  var photos = JSON.parse(localStorage.getItem('photos'))
+  const [data,setData] = useState({
+    title : title,
+    description:description,
+    url : url
+  })
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
+  const handleInputChange = (event) =>{
+    setData({
+      ...data,
+      [event.target.name] :event.target.value 
+    })
+}
+
   const editPhoto = () => {
-      alert(jsonKey)
+      photos[jsonKey] = data
+      localStorage.setItem("photos", JSON.stringify(photos));
       handleClose()
   }
   const handleOpen = () => {
@@ -64,8 +78,10 @@ export default function EditPhotoModal({title,description,url,photos,jsonKey}) {
     <TextField
         className={classes.textField}
         id="Title"
+        name="title"
         placeholder="Title"
         fullWidth
+        onChange={handleInputChange}
         defaultValue=  {title}
         InputLabelProps={{
         shrink: true,
@@ -79,7 +95,9 @@ export default function EditPhotoModal({title,description,url,photos,jsonKey}) {
         className={classes.textField}
         id="Description"
         placeholder="Description"
+        name="description"
         fullWidth
+        onChange={handleInputChange}
         defaultValue=  {description}
         InputLabelProps={{
         shrink: true,
@@ -94,6 +112,8 @@ export default function EditPhotoModal({title,description,url,photos,jsonKey}) {
           id="URL"
           placeholder="URL"
           fullWidth
+          name="url"
+          onChange={handleInputChange}
           defaultValue=  {url}
           InputLabelProps={{
             shrink: true,

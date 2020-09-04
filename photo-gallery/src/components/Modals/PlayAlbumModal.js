@@ -19,7 +19,7 @@ function getModalStyle() {
 const useStyles = makeStyles((theme) => ({
   paper: {
     position: "absolute",
-    width: 400,
+    width: "40%",
     backgroundColor: theme.palette.background.paper,
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
@@ -35,7 +35,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function PlayAlbumModal({photosArray,albums,jsonKey}) {
+export default function PlayAlbumModal({photosArray,jsonKey}) {
+  var albums = JSON.parse(localStorage.getItem('albums'))
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);

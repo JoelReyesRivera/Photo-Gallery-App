@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-const Photo = ({title,url,description,photos,jsonKey})  => {
+const Photo = ({title,url,description,jsonKey})  => {
     const classes = useStyles();
     return (
         <Grid
@@ -44,8 +44,8 @@ const Photo = ({title,url,description,photos,jsonKey})  => {
         <Typography variant="body1"  component="p">{description}</Typography>
       </CardContent>
         <CardActions disableSpacing itemalign="center">
-      <EditPhotoModal title={title} description={description} url={url} photos={photos} jsonKey={jsonKey}/>
-      <DeletePhotoModal photos={photos} jsonKey={jsonKey}/>
+      <EditPhotoModal title={title} description={description} url={url} jsonKey={jsonKey}/>
+      <DeletePhotoModal jsonKey={jsonKey}/>
         </CardActions>
       </Card>
         </Grid>
@@ -54,6 +54,10 @@ const Photo = ({title,url,description,photos,jsonKey})  => {
 
 
 Photo.propTypes = {
+  title : PropTypes.string.isRequired,
+  url : PropTypes.string.isRequired,
+  description : PropTypes.string.isRequired,
+  jsonKey : PropTypes.string.isRequired
 }
 
 export default Photo

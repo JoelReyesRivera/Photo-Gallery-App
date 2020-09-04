@@ -1,10 +1,10 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import Grid from "@material-ui/core/Grid";
 import Typography from '@material-ui/core/Typography';
 import AddPhotoModal from '../Modals/AddPhotoModal'
-function Status(photos) {
-    var photoQuantity = Object.keys(photos.photos).length
+function Status() {
+    var photos = JSON.parse(localStorage.getItem('photos'))
+    var photoQuantity = Object.keys(photos).length
     const styles = {
         background: "white",
         color: "black",
@@ -27,13 +27,12 @@ function Status(photos) {
             <Typography variant="h5" gutterBottom >
             {photoQuantity} Photos Total
             </Typography>
-      <AddPhotoModal photos = {photos}/>
+      <AddPhotoModal/>
         </Grid>
     )
 }
 
 Status.propTypes = {
-photos : PropTypes.object.isRequired
 }
 
 export default Status

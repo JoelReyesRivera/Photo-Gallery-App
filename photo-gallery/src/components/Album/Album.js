@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
@@ -24,14 +23,26 @@ const useStyles = makeStyles((theme) => ({
     }
   }));
 
-const Album = ({name,description,tags,photos,albums,jsonKey,photosArray})  => {
+const Album = ({name,description,tags,jsonKey,photosArray})  => {
+  var photos = JSON.parse(localStorage.getItem('photos'))
+
     const classes = useStyles();
     const setTags = () =>{
       var array= [ ]
+      array.push(<Typography variant="h6" key={'tags'}  component="p"> Tags</Typography>)
       for (let i = 0; i < tags.length;i++){
         array.push(<Typography key= {i} className={classes.tags} variant="body2"  component="p"> - {tags[i]}</Typography>)
       }
       return array
+    }
+    const getPhoto = () =>{
+        if(photosArray.length===0){
+          return "https://www.worldloppet.com/wp-content/uploads/2018/10/no-img-placeholder.png"
+        }
+        else{
+          return photos[photosArray[0]].url
+        }
+
     }
     return (
         <Grid
@@ -45,19 +56,18 @@ const Album = ({name,description,tags,photos,albums,jsonKey,photosArray})  => {
         <CardHeader title={name} />
         <CardMedia
           className={classes.media}
-          image={photos[photosArray[0]].url}
+          image={getPhoto()}
           title={name}
         />
         <CardContent>
-        <Typography variant="h6"  component="p"> Tags</Typography>
           {setTags()}
         </CardContent>
         <CardContent>
         <Typography variant="body1"  component="p">{description}</Typography>
       </CardContent>
       <CardActions>
-        <DeleteAlbumModal albums={albums} jsonKey={jsonKey}/>
-        <PlayAlbumModal albums={albums} jsonKey={jsonKey} photosArray={photos}/>
+        <DeleteAlbumModal  jsonKey={jsonKey}/>
+        <PlayAlbumModal  jsonKey={jsonKey} photosArray={photos}/>
       </CardActions>
       </Card>
         </Grid>

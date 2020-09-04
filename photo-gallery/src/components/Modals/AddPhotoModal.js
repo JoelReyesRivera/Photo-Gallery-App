@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Fab from '@material-ui/core/Fab';
@@ -38,15 +38,42 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function AddPhotoModal(photos) {
+export default function AddPhotoModal() {
+  var photos = JSON.parse(localStorage.getItem('photos'))
+  const [data,setData] = useState({
+    title : " ",
+    description:" ",
+    url : " "
+  })
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
   const addPhoto = () => {
-      //alert(jsonKey.substring(5,jsonKey.length))
+      if(data.title === ' ' || data.descripcion === ' ' || data.url === ' '){
+        alert('INCOMPLETE INFO')
+        return
+      }
+      var photosKeys = Object.keys(photos)
+      var lastIndex = 0
+      for (let i = 0; i < photosKeys.length; i++) {
+        var index = parseInt(photosKeys[i].substring(5,photosKeys.length))
+        if (lastIndex < index) 
+          lastIndex = index
+      }
+      var newKey = 'photo' + (lastIndex+1)
+      var newPhotos = photos
+      newPhotos[newKey] = data
+      localStorage.setItem("photos", JSON.stringify(newPhotos));
       handleClose()
   }
+  const handleInputChange = (event) =>{
+      setData({
+        ...data,
+        [event.target.name] :event.target.value 
+      })
+  }
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -67,6 +94,8 @@ export default function AddPhotoModal(photos) {
         id="Title"
         placeholder="Title"
         fullWidth
+        name="title"
+        onChange={handleInputChange}
         InputLabelProps={{
         shrink: true,
         }}
@@ -79,7 +108,9 @@ export default function AddPhotoModal(photos) {
         className={classes.textField}
         id="Description"
         placeholder="Description"
+        onChange={handleInputChange}
         fullWidth
+        name="description"
         InputLabelProps={{
         shrink: true,
           }}
@@ -92,7 +123,9 @@ export default function AddPhotoModal(photos) {
           className={classes.textField}
           id="URL"
           placeholder="URL"
+          onChange={handleInputChange}
           fullWidth
+          name="url"
           InputLabelProps={{
             shrink: true,
           }}

@@ -1,11 +1,11 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import Grid from "@material-ui/core/Grid";
 import Typography from '@material-ui/core/Typography';
 import AddAlbumModal from '../Modals/AddAlbumModal'
 
-function StatusAlbums(albums, photos) {
-    var albumsQuantity = Object.keys(albums.albums).length
+function StatusAlbums() {
+    var albums = JSON.parse(localStorage.getItem('albums'))
+    var albumsQuantity = Object.keys(albums).length
     const styles = {
         background: "white",
         color: "black",
@@ -28,14 +28,13 @@ function StatusAlbums(albums, photos) {
             <Typography variant="h5" gutterBottom >
             {albumsQuantity} Albums Total
             </Typography>
-      <AddAlbumModal albums = {albums} photos={photos}/>
+      <AddAlbumModal/>
 
         </Grid>
     )
 }
 
 StatusAlbums.propTypes = {
-albums : PropTypes.object.isRequired
 }
 
 export default StatusAlbums

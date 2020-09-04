@@ -102,5 +102,4 @@ const samplePhotos =
       "url": "https://source.unsplash.com/1300x900/?vacations"
     }
   };
-
 export default samplePhotos;

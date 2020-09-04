@@ -35,13 +35,29 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function DeletePhotoModal({photos,jsonKey}) {
+export default function DeletePhotoModal({jsonKey}) {
+  var photos = JSON.parse(localStorage.getItem('photos'))
+  var albums = JSON.parse(localStorage.getItem('albums'))
+
+
   const classes = useStyles();
   const [modalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
 
   const deletePhoto = () => {
+      var albumKeys = Object.keys(albums);
+      for (let index = 0; index < albumKeys.length; index++) {
+          if(albums[albumKeys[index]].photosIds.includes(jsonKey)){
+            for (let i = 0; i < albums[albumKeys[index]].photosIds.length; i++) {
+              if(albums[albumKeys[index]].photosIds[i] === jsonKey){
+                albums[albumKeys[index]].photosIds.splice(i,1)
+              }
+            }
+      }
+    }
       delete (photos[jsonKey])
+      localStorage.setItem("photos", JSON.stringify(photos));
+      localStorage.setItem("albums", JSON.stringify(albums));
       handleClose()
   }
   const handleOpen = () => {
@@ -81,4 +97,4 @@ export default function DeletePhotoModal({photos,jsonKey}) {
       </Modal>
     </div>
   );
-}
+  }
